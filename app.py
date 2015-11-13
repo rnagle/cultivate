@@ -1,7 +1,13 @@
+import os
+
 from flask import Flask, render_template
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+
+if os.environ.get('DEPLOYMENT_TARGET', False) == 'production':
+    app.config.from_object('config.ProdConfig')
+else:
+    app.config.from_object('config.Config')
 
 @app.route('/')
 def home():
@@ -18,5 +24,6 @@ def person(identifier):
     return render_template('home.html', **{'content': 'Person!'})
 
 
-if __name__ == "__main__":
-    app.run()
+port = int(os.environ.get('PORT', 5000))
+if __name__ == '__main__':
+    app.run(port=port, host='0.0.0.0')
