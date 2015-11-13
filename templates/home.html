@@ -1,5 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  {{ content }}
+
+<main class="main-content">
+
+  <form class="main-search-form">
+
+    <div class="city-search-area">
+      <label for="city">
+        Who do I talk to in...
+      </label>
+      <input type="text" id="city" name="city" class="mega-input" placeholder="Austin, TX">
+    </div>
+    <div class="search-terms-area">
+      <label for="">
+        About
+      </label>
+      <input type="text" class="search-term-input" placeholder="theskimm.com">
+      <input type="text" class="search-term-input" placeholder="#skimm">
+      <input type="text" class="search-term-input" placeholder="@skimm">
+    </div>
+
+    <input type="submit" value="Dig Them Up!" class="mega-submit" id="submit">
+
+  </form>
+
+  <div class="results" id="results">
+
+    <div class="results-list">
+
+      <h2>We found people!</h2>
+
+      <ul>
+
+        {% for i in 0..2 %}
+
+        <li>
+          <div class="avatar-wrap">
+            <img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/3/profile/profile-80_22.jpg" alt="" />
+          </div>
+          <div class="user-info">
+            <h4>Chris Coyier</h4>
+            <div class="bio">User bio here</div>
+            <ul class="links">
+              <li>
+                <a href="#0">Twitter</a>
+              </li>
+              <li>
+                <a href="#0">GitHub</a>
+              </li>
+              <li>
+                <a href="#0">Facebook</a>
+              </li>
+            </ul>
+          </div>
+          <div class="score-wrap">
+            <div class="score">
+              83
+            </div>
+          </div>
+        </li>
+
+        {% endfor %}
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!--   {{ content }} -->
+
 {% endblock %}
