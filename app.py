@@ -23,14 +23,6 @@ def results():
 def person(identifier):
     return render_template('home.html', **{'content': 'Person!'})
 
-
-<<<<<<< HEAD
-
-
-if __name__ == "__main__":
-    app.run()
-=======
 port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':
     app.run(port=port, host='0.0.0.0')
->>>>>>> e94b8739707eb833a08fd0050a92e85801b10b37
