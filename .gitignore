@@ -1,2 +1,4 @@
+.env
+data
 *.pyc
 .DS_Store
