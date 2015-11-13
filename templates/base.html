@@ -1,18 +1,31 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Cultivate!</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
-    </head>
 
-    <body>
-      {% block content %}
-      {% endblock content %}
+<head>
+  <meta charset="utf-8">
 
-      <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
-    </body>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Cultivate - Unearthing Communities</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+
+</head>
+
+<body>
+
+  <header class="main-header">
+    <h1>Cultivate</h1>
+    <span>Unearthing Communities</span>
+  </header>
+
+  {% block content %}
+  {% endblock content %}
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+
+</body>
+
 </html>
 
