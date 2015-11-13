@@ -31,39 +31,7 @@
 
       <h2>We found people!</h2>
 
-      <ul>
-
-        {% for i in range(0,2) %}
-
-        <li>
-          <div class="avatar-wrap">
-            <img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/3/profile/profile-80_22.jpg" alt="" />
-          </div>
-          <div class="user-info">
-            <h4>Chris Coyier</h4>
-            <div class="bio">User bio here</div>
-            <ul class="links">
-              <li>
-                <a href="#0">Twitter</a>
-              </li>
-              <li>
-                <a href="#0">GitHub</a>
-              </li>
-              <li>
-                <a href="#0">Facebook</a>
-              </li>
-            </ul>
-          </div>
-          <div class="score-wrap">
-            <div class="score">
-              83
-            </div>
-          </div>
-        </li>
-
-        {% endfor %}
-
-      </ul>
+      <ul></ul>
 
     </div>
 
@@ -72,5 +40,29 @@
 </main>
 
 <!--   {{ content }} -->
+
+<script type="text/template" id="results-tmpl">
+  <% _.each(users, function(user, idx) { %>
+  <li>
+    <div class="avatar-wrap">
+      <img src="<%= user.profile_image_url %>" alt="<% user.name %>" />
+    </div>
+    <div class="user-info">
+      <h4><%= user.name %></h4>
+      <div class="bio"><% user.description %></div>
+      <ul class="links">
+        <li>
+          <a href="https://twitter.com/<%= user.screen_name %>">@<%= user.screen_name %></a>
+        </li>
+      </ul>
+    </div>
+    <div class="score-wrap">
+      <div class="score">
+        83
+      </div>
+    </div>
+  </li>
+  <%  }) %>
+</script>
 
 {% endblock %}

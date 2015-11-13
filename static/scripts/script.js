@@ -12,8 +12,10 @@
     return false;
   };
 
-  var renderResults = function() {
-    console.log('TKTK');
+  var renderResults = function(data) {
+    var tmpl = _.template($('#results-tmpl').html());
+    $('#results ul').html(tmpl({ users: data.users }));
+    $('body').addClass('show-results');
   };
 
   var bindEvents = function() {
