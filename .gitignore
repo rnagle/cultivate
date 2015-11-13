@@ -2,5 +2,6 @@ node_modules
 .sass-cache
 .env
 data
+static/vendor
 *.pyc
 .DS_Store
