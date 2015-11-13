@@ -1,4 +1,5 @@
 .env
 data
+static/vendor
 *.pyc
 .DS_Store

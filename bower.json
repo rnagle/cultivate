@@ -1,0 +1,25 @@
+{
+  "name": "cultivate",
+  "version": "0.0.0",
+  "homepage": "https://github.com/rnagle/cultivate",
+  "authors": [
+    "Ryan Nagle <rmnagle@gmail.com>"
+  ],
+  "description": "Unearthing communities!",
+  "main": "app.py",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}

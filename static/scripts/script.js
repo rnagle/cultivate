@@ -1,7 +1,27 @@
-$("#submit").on("click", function(event) {
+(function() {
+  var $ = jQuery;
 
-  event.preventDefault();
+  var submitSearch = function() {
+    $.ajax({
+      url: '/search',
+      dataType: 'json',
+      method: 'post',
+      data: $('.main-search-form').serialize(),
+      success: renderResults
+    });
+    return false;
+  };
 
-  $("body").toggleClass("show-results");
+  var renderResults = function() {
+    console.log('TKTK');
+  };
 
-});
+  var bindEvents = function() {
+    $('form').on('submit', submitSearch);
+  };
+
+  $(document).ready(function() {
+    bindEvents();
+  });
+
+})();
