@@ -5,11 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Cultivate!</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     </head>
 
     <body>
       {% block content %}
       {% endblock content %}
+
+      <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
     </body>
 </html>
 
