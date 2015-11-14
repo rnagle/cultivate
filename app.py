@@ -81,11 +81,7 @@ def get_score(user):
     return score
 
 def get_querystring_from_params(params):
-    string = urllib.quote_plus('+'.join(params))
-
-    last_month = datetime.datetime.now() - datetime.timedelta(days=30)
-    string += 'since:{}'.format(last_month.strftime('%Y-%m-%d'))
-    return string
+    return urllib.quote_plus('+'.join(params))
 
 port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':
