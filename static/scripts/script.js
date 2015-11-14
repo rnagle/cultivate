@@ -4,12 +4,8 @@
 
   var submitSearch = function() {
 
-    // temp for ui
-    $('body').addClass('show-results');
+    $('body').removeClass('hide-plants');
     generate();
-    setTimeout(function() {
-      $('body').addClass('hide-plants');
-    }, 5000)
 
     $.ajax({
       url: '/search',
@@ -24,6 +20,10 @@
   var renderResults = function(data) {
     var tmpl = _.template($('#results-tmpl').html());
     $('#results ul').html(tmpl({ users: data.users }));
+    setTimeout(function() {
+      $('body').addClass('hide-plants show-results');
+    }, 4000);
+    $('#results ul').html(tmpl({ users: _.sortBy(data.users, 'score').reverse() }));
     $('body').addClass('show-results');
   };
 

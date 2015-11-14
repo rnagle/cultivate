@@ -48,7 +48,7 @@
     </div>
     <div class="user-info">
       <h4><%= user.name %></h4>
-      <div class="bio"><% user.description %></div>
+      <div class="bio"><%= user.description %></div>
       <ul class="links">
         <li>
           <a href="https://twitter.com/<%= user.screen_name %>">@<%= user.screen_name %></a>
@@ -57,7 +57,7 @@
     </div>
     <div class="score-wrap">
       <div class="score">
-        83
+        <%= user.score %>
       </div>
     </div>
   </li>

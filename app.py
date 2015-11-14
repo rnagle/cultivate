@@ -1,8 +1,6 @@
 import os
 import tweepy
 import urllib
-import collections
-import datetime
 import json
 
 from flask import Flask, render_template, request
@@ -15,8 +13,14 @@ if os.environ.get('DEPLOYMENT_TARGET', False) == 'production':
 else:
     app.config.from_object('config.Config')
 
-auth = tweepy.OAuthHandler(os.environ.get('TWITTER_CONSUMER_KEY'), os.environ.get('TWITTER_CONSUMER_SECRET'))
-auth.set_access_token(os.environ.get('TWITTER_ACCESS_TOKEN_KEY'), os.environ.get('TWITTER_ACCESS_TOKEN_SECRET'))
+auth = tweepy.OAuthHandler(
+    os.environ.get('TWITTER_CONSUMER_KEY'),
+    os.environ.get('TWITTER_CONSUMER_SECRET')
+)
+auth.set_access_token(
+    os.environ.get('TWITTER_ACCESS_TOKEN_KEY'),
+    os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+)
 api = tweepy.API(auth)
 
 @app.route('/')
@@ -36,12 +40,10 @@ def person(identifier):
 
 @app.route('/search', methods=['POST'])
 def search():
-    """
-    TODO:
-    - search for stuff on twitter
-    - figure out who's included and rank them
-    - return json to build results list
-    """
+    if app.config['DEBUG']:
+        with open('data/users.json') as users_json:
+            return users_json.read()
+
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
     tweets = tweepy.Cursor(
@@ -49,7 +51,7 @@ def search():
         q=querystring,
         rpp=100,
         result_type="recent"
-    ).items(1000)
+    ).items(app.config['TWEET_LIMIT'])
 
     users = {}
     for tweet in tweets:
