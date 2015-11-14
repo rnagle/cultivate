@@ -4,7 +4,7 @@
 
   var submitSearch = function() {
 
-    $('body').removeClass('hide-plants');
+    $('body').removeClass('hide-plants show-results');
     generate();
 
     $.ajax({
@@ -24,7 +24,6 @@
       $('body').addClass('hide-plants show-results');
     }, 4000);
     $('#results ul').html(tmpl({ users: _.sortBy(data.users, 'score').reverse() }));
-    $('body').addClass('show-results');
   };
 
   var bindEvents = function() {
