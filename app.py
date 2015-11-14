@@ -4,7 +4,7 @@ import urllib
 import json
 
 from flask import Flask, render_template, request
-from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim as Geocoder
 from math import radians, cos, sin, asin, sqrt
 
 app = Flask(__name__)
@@ -41,41 +41,54 @@ def person(identifier):
 
 @app.route('/search', methods=['POST'])
 def search():
-    if app.config['DEBUG']:
-        with open('data/users.json') as users_json:
-            return users_json.read()
+    # if app.config['DEBUG']:
+    #     with open('data/users.json') as users_json:
+    #         return users_json.read()
 
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
 
-    geocoder = Nominatim()
-    loc = geocoder.geocode(query['name'])
-    geocode = '{},{},{}'.format(loc.latitude, loc.longitude, "20mi")
+    geocoder = Geocoder()
+    loc = geocoder.geocode(query['city'])
+
     tweets = tweepy.Cursor(
         api.search,
         q=querystring,
         rpp=100,
-        result_type="recent",
-        geocode=geocode
+        result_type="recent"
     ).items(app.config['TWEET_LIMIT'])
 
     users = {}
+    skip = []
     for tweet in tweets:
         user = users.get(tweet.author.screen_name)
         screen_name = tweet.author.screen_name
 
+        if screen_name in skip:
+            continue
+
         if user is None:
-            counts = {
-                'statuses': tweet.author.statuses_count,
-                'listed': tweet.author.listed_count,
-                'friends': tweet.author.friends_count,
-                'followers': tweet.author.followers_count,
-                'total_tweets': 0,
-                'total_favorited': 0,
-                'total_retweeted': 0
-            }
-            users[screen_name] = tweet.author._json
-            users[screen_name]['counts'] = counts
+            print tweet.author.location
+            user_loc = geocoder.geocode(tweet.author.location)
+            if user_loc:
+                if haversine(user_loc.longitude, user_loc.latitude, loc.longitude, loc.latitude) < 25:
+                    counts = {
+                        'statuses': tweet.author.statuses_count,
+                        'listed': tweet.author.listed_count,
+                        'friends': tweet.author.friends_count,
+                        'followers': tweet.author.followers_count,
+                        'total_tweets': 0,
+                        'total_favorited': 0,
+                        'total_retweeted': 0
+                    }
+                    users[screen_name] = tweet.author._json
+                    users[screen_name]['counts'] = counts                
+                else:
+                    skip.append(screen_name)
+                    continue
+            else:
+                skip.append(screen_name)
+                continue
 
         users[screen_name]['counts']['total_tweets'] += 1
         users[screen_name]['counts']['total_favorited'] += tweet.favorite_count
@@ -109,7 +122,7 @@ def haversine(lon1, lat1, lon2, lat2):
     dlat = lat2 - lat1 
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
     c = 2 * asin(sqrt(a)) 
-    r = 6371 # Radius of earth in kilometers. Use 3956 for miles
+    r = 3956 # Radius of earth in kilometers. Use 3956 for miles
     return c * r
 
 
