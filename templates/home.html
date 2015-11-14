@@ -8,17 +8,16 @@
 
     <div class="city-search-area">
       <label for="city">
-        Who do I talk to in...
+        Search keyword(s) for your <strong>larger</strong> community
       </label>
-      <input type="text" id="city" name="city" class="mega-input" placeholder="Austin, TX">
+
+      <input type="text" class="input-keywords" name="term[]" placeholder="theskimm.com">
     </div>
     <div class="search-terms-area">
       <label for="">
-        About
+        <strong>Narrow</strong> by location
       </label>
-      <input type="text" class="search-term-input" name="term[]" placeholder="theskimm.com">
-      <input type="text" class="search-term-input" name="term[]" placeholder="#skimm">
-      <input type="text" class="search-term-input" name="term[]" placeholder="@skimm">
+      <input type="text" id="city" name="city" class="input-city" placeholder="Austin, TX">
     </div>
 
     <input type="submit" value="Dig Them Up!" class="mega-submit" id="submit">
@@ -39,7 +38,7 @@
 
 </main>
 
-<!--   {{ content }} -->
+<!-- {{ content }} -->
 
 <script type="text/template" id="results-tmpl">
   <% _.each(users, function(user, idx) { %>
