@@ -1,9 +1,10 @@
 import os
-
-from flask import Flask, render_template, request
 import tweepy
 import urllib
 import json
+
+from flask import Flask, render_template, request
+from geopy.geocoders import Nominatim
 
 app = Flask(__name__)
 
@@ -75,18 +76,22 @@ def search():
         users[screen_name]['counts']['total_retweeted'] += tweet.retweet_count
 
     for screen_name in users.keys():
-        users[screen_name]['score'] = get_score(users[screen_name])
+        users[screen_name]['score'] = get_score(users[screen_name], query)
 
     return json.dumps({'users': users})
 
 
-def get_score(user):
+def get_score(user, query):
     score = 0
     score += user['counts']['total_tweets']
     score += user['counts']['total_favorited']
     score += user['counts']['total_retweeted'] * 2
     score += user['counts']['followers'] / 50
+    score += distance(user, query)
     return score
+
+def distance(user, query):
+
 
 
 def get_querystring_from_params(params):
