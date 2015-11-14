@@ -56,6 +56,11 @@ def fake_search():
             resp = users_json.read()
             return Response(resp, mimetype='application/json')
 
+    if term == 'theskimm' and city == 'Chicago, IL':
+        with open('data/skimm_chicago.json') as users_json:
+            resp = users_json.read()
+            return Response(resp, mimetype='application/json')
+
     return Response(json.dumps({'users': []}), mimetype='application/json')
 
 
