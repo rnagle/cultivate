@@ -41,63 +41,8 @@ def person(identifier):
 
 @app.route('/search', methods=['POST'])
 def search():
-    # if app.config['DEBUG']:
-    #     with open('data/users.json') as users_json:
-    #         return users_json.read()
-
-    query = dict(request.form)
-    querystring = get_querystring_from_params(query['term[]'])
-
-    geocoder = Geocoder()
-    loc = geocoder.geocode(query['city'])
-
-    tweets = tweepy.Cursor(
-        api.search,
-        q=querystring,
-        rpp=100,
-        result_type="recent"
-    ).items(app.config['TWEET_LIMIT'])
-
-    users = {}
-    skip = []
-    for tweet in tweets:
-        user = users.get(tweet.author.screen_name)
-        screen_name = tweet.author.screen_name
-
-        if screen_name in skip:
-            continue
-
-        if user is None:
-            print tweet.author.location
-            user_loc = geocoder.geocode(tweet.author.location)
-            if user_loc:
-                if haversine(user_loc.longitude, user_loc.latitude, loc.longitude, loc.latitude) < 25:
-                    counts = {
-                        'statuses': tweet.author.statuses_count,
-                        'listed': tweet.author.listed_count,
-                        'friends': tweet.author.friends_count,
-                        'followers': tweet.author.followers_count,
-                        'total_tweets': 0,
-                        'total_favorited': 0,
-                        'total_retweeted': 0
-                    }
-                    users[screen_name] = tweet.author._json
-                    users[screen_name]['counts'] = counts                
-                else:
-                    skip.append(screen_name)
-                    continue
-            else:
-                skip.append(screen_name)
-                continue
-
-        users[screen_name]['counts']['total_tweets'] += 1
-        users[screen_name]['counts']['total_favorited'] += tweet.favorite_count
-        users[screen_name]['counts']['total_retweeted'] += tweet.retweet_count
-
-    for screen_name in users.keys():
-        users[screen_name]['score'] = get_score(users[screen_name], query)
-
-    return json.dumps({'users': users})
+    with open('data/users.json') as users_json:
+        return users_json.read()
 
 
 def get_score(user, query):
