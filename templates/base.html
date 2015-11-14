@@ -16,17 +16,29 @@
 
 <body>
 
-  <header class="main-header">
-    <div class="subtitle">Unearthing Community Leaders</div>
-    <h1>Cultivate</h1>
+  <div class="page-wrap">
 
-    <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-1">
-    <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-2">
-    <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-3">
-  </header>
+    <header class="main-header">
+      <div class="subtitle">Unearthing Community Leaders</div>
+      <h1>Cultivate</h1>
 
-  {% block content %}
-  {% endblock content %}
+      <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-1">
+      <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-2">
+      <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-3">
+    </header>
+
+    {% block content %}
+    {% endblock content %}
+
+    <footer class="main-footer">
+
+      <p>This project was created during <a href="http://www.snd.org/2015/10/meet-community-austin/">SND Makes Austin</a> in November 2015 by Alex Duner, Dheerja Kaur, Ryan Nagle, Tashween Ali, and Chris Coyier. The code is available at the <a href="https://github.com/rnagle/cultivate">GitHub repo</a>.</p>
+
+      <p>The cool growing plant thingies are by <a href="http://codepen.io/osublake/pen/gpGEye">Blake Bowen</a>.</p>
+
+    </footer>
+
+  </div>
 
   <svg viewBox="0 0 550 400" preserveAspectRatio="xMidYMax meet" class="grow-grow-grow">
     <g id="stems" fill="none" stroke="green"></g>
