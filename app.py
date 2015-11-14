@@ -4,10 +4,13 @@ import urllib
 import json
 
 from flask import Flask, render_template, request, Response
+from flask.ext.compress import Compress
+
 from geopy.geocoders import Nominatim as Geocoder
 from math import radians, cos, sin, asin, sqrt
 
 app = Flask(__name__)
+Compress(app)
 
 if os.environ.get('DEPLOYMENT_TARGET', False) == 'production':
     app.config.from_object('config.ProdConfig')
