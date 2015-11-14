@@ -141,8 +141,14 @@ p {
   display: none;
   > ul {
     list-style: none;
+    display: flex;
+    justify-content: space-between;
     > li {
       display: flex;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 1px 1px 1px black;
+      width: 49%;
       opacity: 0;
       transform: translateX(100%);
       margin: 0 0 1rem 0;
@@ -193,20 +199,7 @@ p {
 
 body.show-results {
   .results {
-    .results-list {
-      display: block;
-      > ul > li {
-        &:nth-child(1) {
-          animation: slide-in 0.2s forwards;
-        }
-        &:nth-child(2) {
-          animation: slide-in 0.2s 0.1s forwards;
-        }
-        &:nth-child(3) {
-          animation: slide-in 0.2s 0.2s forwards;
-        }
-      }
-    }
+    display: block;
   }
   .main-search-form {
     left: 0;
