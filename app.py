@@ -5,6 +5,7 @@ import tweepy
 import urllib
 import collections
 import datetime
+import json
 
 app = Flask(__name__)
 
@@ -42,42 +43,53 @@ def search():
     """
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
-    tweets = tweepy.Cursor(api.search, q=querystring, rpp=100, result_type="recent").items(1000)
+    tweets = tweepy.Cursor(
+        api.search,
+        q=querystring,
+        rpp=100,
+        result_type="recent"
+    ).items(1000)
+
     users = {}
     for tweet in tweets:
         user = users.get(tweet.author.screen_name)
-        if user is None:
-            users[tweet.author.screen_name] = {
-                'user_info': {},
-                'tweet_counts': {}
-            }
-            users[tweet.author.screen_name]['user_info'] = {
-                'statuses_count': tweet.author.statuses_count,
-                'lists_memberships': tweet.author.lists_memberships,
-                'listed_count': tweet.author.listed_count,
-                'friends_count': tweet.author.friends_count,
-                'followers_count': tweet.author.followers_count,
-                'description': tweet.author.description,
-                'location': tweet.author.location
-            }
-            users[tweet.author.screen_name]['tweet_counts']['favorited_count'] = 0
-            users[tweet.author.screen_name]['tweet_counts']['retweeted_count'] = 0
-        users[tweet.author.screen_name]['tweet_counts']['favorited_count'] += tweet.favorite_count
-        users[tweet.author.screen_name]['tweet_counts']['retweeted_count'] += tweet.retweet_count
-    return '{"success": true}'
+        screen_name = tweet.author.screen_name
 
-def get_tweets_from_query(query):
-    querystring = get_querystring_from_params(query['term[]'])
-    results = api.search(querystring)
-    import ipdb; ipdb.set_trace()
-    return results
+        if user is None:
+            counts = {
+                'statuses': tweet.author.statuses_count,
+                'listed': tweet.author.listed_count,
+                'friends': tweet.author.friends_count,
+                'followers': tweet.author.followers_count,
+                'total_tweets': 0,
+                'total_favorited': 0,
+                'total_retweeted': 0
+            }
+            users[screen_name] = tweet.author._json
+            users[screen_name]['counts'] = counts
+
+        users[screen_name]['counts']['total_tweets'] += 1
+        users[screen_name]['counts']['total_favorited'] += tweet.favorite_count
+        users[screen_name]['counts']['total_retweeted'] += tweet.retweet_count
+
+    for screen_name in users.keys():
+        users[screen_name]['score'] = get_score(users[screen_name])
+
+    return json.dumps({'users': users})
+
+
+def get_score(user):
+    score = 0
+    score += user['counts']['total_tweets']
+    score += user['counts']['total_favorited']
+    score += user['counts']['total_retweeted'] * 2
+    score += user['counts']['followers'] / 50
+    return score
+
 
 def get_querystring_from_params(params):
-    string = urllib.quote_plus('+'.join(params))
+    return urllib.quote_plus('+'.join(params))
 
-    last_month = datetime.datetime.now() - datetime.timedelta(days=30)
-    string += 'since:{}'.format(last_month.strftime('%Y-%m-%d'))
-    return string
 
 port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':
