@@ -43,45 +43,53 @@ def search():
     """
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
-    tweets = tweepy.Cursor(api.search, q=querystring, rpp=100, result_type="recent").items(1000)
+    tweets = tweepy.Cursor(
+        api.search,
+        q=querystring,
+        rpp=100,
+        result_type="recent"
+    ).items(1000)
+
     users = {}
     for tweet in tweets:
         user = users.get(tweet.author.screen_name)
-        if user is None:
-            users[tweet.author.screen_name] = {
-                'user_info': {},
-                'tweet_counts': {}
-            }
-            users[tweet.author.screen_name]['user_info'] = {
-                'statuses_count': tweet.author.statuses_count,
-                'listed_count': tweet.author.listed_count,
-                'friends_count': tweet.author.friends_count,
-                'followers_count': tweet.author.followers_count,
-                'description': tweet.author.description,
-                'location': tweet.author.location
-            }
-            users[tweet.author.screen_name]['full_user_info'] = tweet.author
-            users[tweet.author.screen_name]['tweet_counts']['tweet_count'] = 0
-            users[tweet.author.screen_name]['tweet_counts']['favorited_count'] = 0
-            users[tweet.author.screen_name]['tweet_counts']['retweeted_count'] = 0
-        users[tweet.author.screen_name]['tweet_counts']['tweet_count'] += 1
-        users[tweet.author.screen_name]['tweet_counts']['favorited_count'] += tweet.favorite_count
-        users[tweet.author.screen_name]['tweet_counts']['retweeted_count'] += tweet.retweet_count
+        screen_name = tweet.author.screen_name
 
-    for user in users.keys():
-        users[user]['score'] = get_score(users[user])
-    return json.dumps(users)
+        if user is None:
+            counts = {
+                'statuses': tweet.author.statuses_count,
+                'listed': tweet.author.listed_count,
+                'friends': tweet.author.friends_count,
+                'followers': tweet.author.followers_count,
+                'total_tweets': 0,
+                'total_favorited': 0,
+                'total_retweeted': 0
+            }
+            users[screen_name] = tweet.author._json
+            users[screen_name]['counts'] = counts
+
+        users[screen_name]['counts']['total_tweets'] += 1
+        users[screen_name]['counts']['total_favorited'] += tweet.favorite_count
+        users[screen_name]['counts']['total_retweeted'] += tweet.retweet_count
+
+    for screen_name in users.keys():
+        users[screen_name]['score'] = get_score(users[screen_name])
+
+    return json.dumps({'users': users})
+
 
 def get_score(user):
     score = 0
-    score += user['tweet_counts']['tweet_count']
-    score += user['tweet_counts']['favorited_count']
-    score += user['tweet_counts']['retweeted_count'] * 2
-    score += user['user_info']['followers_count'] / 50
+    score += user['counts']['total_tweets']
+    score += user['counts']['total_favorited']
+    score += user['counts']['total_retweeted'] * 2
+    score += user['counts']['followers'] / 50
     return score
+
 
 def get_querystring_from_params(params):
     return urllib.quote_plus('+'.join(params))
+
 
 port = int(os.environ.get('PORT', 5000))
 if __name__ == '__main__':
