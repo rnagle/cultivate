@@ -1,7 +1,16 @@
 (function() {
+
   var $ = jQuery;
 
   var submitSearch = function() {
+
+    // temp for ui
+    $('body').addClass('show-results');
+    generate();
+    setTimeout(function() {
+      $('body').addClass('hide-plants');
+    }, 5000)
+
     $.ajax({
       url: '/search',
       dataType: 'json',

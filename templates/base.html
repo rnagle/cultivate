@@ -28,8 +28,16 @@
   {% block content %}
   {% endblock content %}
 
+  <svg viewBox="0 0 550 400" preserveAspectRatio="xMidYMax meet" class="grow-grow-grow">
+    <g id="stems" fill="none" stroke="green"></g>
+    <g id="leaves"></g>
+  </svg>
+
   <script src="{{ url_for('static', filename='vendor/jquery/dist/jquery.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='vendor/underscore/underscore-min.js') }}"></script>
+  <script src="{{ url_for('static', filename='scripts/lodash.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='scripts/TweenMax.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='scripts/DrawSVGPlugin.js') }}"></script>
+  <script src="{{ url_for('static', filename='scripts/growth.js') }}"></script>
   <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 
 </body>
