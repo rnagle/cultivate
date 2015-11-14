@@ -87,11 +87,7 @@ def get_score(user, query):
     score += user['counts']['total_favorited']
     score += user['counts']['total_retweeted'] * 2
     score += user['counts']['followers'] / 50
-    score += distance(user, query)
     return score
-
-def distance(user, query):
-
 
 
 def get_querystring_from_params(params):
