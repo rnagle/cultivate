@@ -2,12 +2,14 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Cultivate - Unearthing Communities</title>
 
+  <link rel="stylesheet" href="//cloud.typography.com/610186/608328/css/fonts.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
 
 </head>
@@ -15,8 +17,12 @@
 <body>
 
   <header class="main-header">
+    <div class="subtitle">Unearthing Community Leaders</div>
     <h1>Cultivate</h1>
-    <span>Unearthing Communities</span>
+
+    <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-1">
+    <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-2">
+    <img src="{{ url_for('static', filename='images/cultguy.svg') }}" alt="" class="cult-guy cult-guy-3">
   </header>
 
   {% block content %}
