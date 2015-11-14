@@ -5,6 +5,7 @@ import tweepy
 import urllib
 import collections
 import datetime
+import json
 
 app = Flask(__name__)
 
@@ -69,8 +70,7 @@ def search():
 
     for user in users.keys():
         users[user]['score'] = get_score(users[user])
-    return users
-
+    return json.dumps(users)
 
 def get_score(user):
     score = 0
