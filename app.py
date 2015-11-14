@@ -39,12 +39,10 @@ def person(identifier):
 
 @app.route('/search', methods=['POST'])
 def search():
-    """
-    TODO:
-    - search for stuff on twitter
-    - figure out who's included and rank them
-    - return json to build results list
-    """
+    if app.config['DEBUG']:
+        with open('data/users.json') as users_json:
+            return users_json.read()
+
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
     tweets = tweepy.Cursor(
