@@ -2,10 +2,12 @@ import os
 import tweepy
 import urllib
 import json
+import requests
 
 from flask import Flask, render_template, request
-from geopy.geocoders import Nominatim as Geocoder
 from math import radians, cos, sin, asin, sqrt
+from geopy.geocoders import Nominatim as Geocoder
+from geopy.distance import vincenty
 
 app = Flask(__name__)
 
@@ -49,7 +51,8 @@ def search():
     querystring = get_querystring_from_params(query['term[]'])
 
     geocoder = Geocoder()
-    loc = geocoder.geocode(query['city'])
+    # loc = geocode(query['city'][0])
+    loc = geocoder.geocode(query['city'][0], timeout=10)
 
     tweets = tweepy.Cursor(
         api.search,
@@ -68,10 +71,11 @@ def search():
             continue
 
         if user is None:
-            print tweet.author.location
-            user_loc = geocoder.geocode(tweet.author.location)
-            if user_loc:
-                if haversine(user_loc.longitude, user_loc.latitude, loc.longitude, loc.latitude) < 25:
+            location = tweet.author.location.encode("utf-8")
+            user_loc = geocoder.geocode(location, timeout=10)
+            print "address: {}".format(location)
+            if user_loc and loc:
+                if distance(user_loc.longitude, user_loc.latitude, loc.longitude, loc.latitude) < 30:
                     counts = {
                         'statuses': tweet.author.statuses_count,
                         'listed': tweet.author.listed_count,
@@ -82,7 +86,7 @@ def search():
                         'total_retweeted': 0
                     }
                     users[screen_name] = tweet.author._json
-                    users[screen_name]['counts'] = counts                
+                    users[screen_name]['counts'] = counts               
                 else:
                     skip.append(screen_name)
                     continue
@@ -109,22 +113,33 @@ def get_score(user, query):
     return score
 
 
-def haversine(lon1, lat1, lon2, lat2):
-    """
-    Calculate the great circle distance between two points 
-    on the earth (specified in decimal degrees)
-    """
-    # convert decimal degrees to radians 
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+def distance(lon1, lat1, lon2, lat2):
+    return vincenty((lon1, lat1), (lon2, lat2)).miles
 
-    # haversine formula 
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
-    r = 3956 # Radius of earth in kilometers. Use 3956 for miles
-    return c * r
 
+def geocode(address):
+    request_url = 'http://maps.googleapis.com/maps/api/geocode/json?'
+    try:
+        request_url += urllib.urlencode({'address': address})
+    except:
+        print "NOPE NOT UNICODE: {}".format(address.encode("utf-8"))
+        return False
+    response = requests.get(request_url)
+    data = json.loads(response.content)
+    if data['results']:
+        if data['results'][0]:
+            lat = data['results'][0]['geometry']['location']['lat']
+            lng = data['results'][0]['geometry']['location']['lng']
+            return {
+                'latitude': lat,
+                'longitude': lng
+            }
+        else:
+            print "NOPE NO RESULTS FOR: {}".format(address)
+            return False
+    else:
+        print "NOPE COULDNT GEOLOCATE: {}".format(address)
+        return False
 
 def get_querystring_from_params(params):
     return urllib.quote_plus('+'.join(params))
