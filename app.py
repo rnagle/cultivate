@@ -5,6 +5,7 @@ import json
 
 from flask import Flask, render_template, request
 from geopy.geocoders import Nominatim
+from math import radians, cos, sin, asin, sqrt
 
 app = Flask(__name__)
 
@@ -46,11 +47,16 @@ def search():
 
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
+
+    geocoder = Nominatim()
+    loc = geocoder.geocode(query['name'])
+    geocode = '{},{},{}'.format(loc.latitude, loc.longitude, "20mi")
     tweets = tweepy.Cursor(
         api.search,
         q=querystring,
         rpp=100,
-        result_type="recent"
+        result_type="recent",
+        geocode=geocode
     ).items(app.config['TWEET_LIMIT'])
 
     users = {}
@@ -86,12 +92,25 @@ def get_score(user, query):
     score += user['counts']['total_tweets']
     score += user['counts']['total_favorited']
     score += user['counts']['total_retweeted'] * 2
-    score += user['counts']['followers'] / 50
-    score += distance(user, query)
+    score += user['counts']['followers'] / 75
     return score
 
-def distance(user, query):
 
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 6371 # Radius of earth in kilometers. Use 3956 for miles
+    return c * r
 
 
 def get_querystring_from_params(params):
