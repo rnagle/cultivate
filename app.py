@@ -3,7 +3,7 @@ import tweepy
 import urllib
 import json
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from geopy.geocoders import Nominatim as Geocoder
 from math import radians, cos, sin, asin, sqrt
 
@@ -29,20 +29,11 @@ def home():
     return render_template('home.html', **{'content': 'Cultivate!'})
 
 
-@app.route('/results')
-def results():
-    return render_template('results.html', **{'content': 'Results!'})
-
-
-@app.route('/person/<identifier>')
-def person(identifier):
-    return render_template('home.html', **{'content': 'Person!'})
-
-
 @app.route('/search', methods=['POST'])
 def search():
     with open('data/users.json') as users_json:
-        return users_json.read()
+        resp = users_json.read()
+        return Response(resp, mimetype='application/json')
 
 
 def get_score(user, query):

@@ -3,5 +3,5 @@ class Config(object):
     TWEET_LIMIT = 100
 
 class ProdConfig(object):
-    DEBUG = True
+    DEBUG = False
     TWEET_LIMIT = 500
