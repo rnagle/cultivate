@@ -1,15 +1,17 @@
 import os
 import tweepy
 import urllib
-import json
 import requests
+import json
 
-from flask import Flask, render_template, request
-from math import radians, cos, sin, asin, sqrt
+from flask import Flask, render_template, request, Response
+from flask.ext.compress import Compress
+
 from geopy.geocoders import Nominatim as Geocoder
 from geopy.distance import vincenty
 
 app = Flask(__name__)
+Compress(app)
 
 if os.environ.get('DEPLOYMENT_TARGET', False) == 'production':
     app.config.from_object('config.ProdConfig')
@@ -31,22 +33,21 @@ def home():
     return render_template('home.html', **{'content': 'Cultivate!'})
 
 
-@app.route('/results')
-def results():
-    return render_template('results.html', **{'content': 'Results!'})
-
-
-@app.route('/person/<identifier>')
-def person(identifier):
-    return render_template('home.html', **{'content': 'Person!'})
-
-
 @app.route('/search', methods=['POST'])
 def search():
-    # if app.config['DEBUG']:
-    #     with open('data/users.json') as users_json:
-    #         return users_json.read()
+    if app.config['FAKE']:
+        return fake_search()
+    else:
+        return real_search()
 
+
+def fake_search():
+    with open('data/users.json') as users_json:
+        resp = users_json.read()
+        return Response(resp, mimetype='application/json')
+
+
+def real_search():
     query = dict(request.form)
     querystring = get_querystring_from_params(query['term[]'])
 
@@ -86,7 +87,7 @@ def search():
                         'total_retweeted': 0
                     }
                     users[screen_name] = tweet.author._json
-                    users[screen_name]['counts'] = counts               
+                    users[screen_name]['counts'] = counts
                 else:
                     skip.append(screen_name)
                     continue
@@ -101,7 +102,7 @@ def search():
     for screen_name in users.keys():
         users[screen_name]['score'] = get_score(users[screen_name], query)
 
-    return json.dumps({'users': users})
+    return Response(json.dumps({'users': users}), mimetype='application/json')
 
 
 def get_score(user, query):
