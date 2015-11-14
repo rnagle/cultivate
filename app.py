@@ -53,24 +53,34 @@ def search():
             }
             users[tweet.author.screen_name]['user_info'] = {
                 'statuses_count': tweet.author.statuses_count,
-                'lists_memberships': tweet.author.lists_memberships,
                 'listed_count': tweet.author.listed_count,
                 'friends_count': tweet.author.friends_count,
                 'followers_count': tweet.author.followers_count,
                 'description': tweet.author.description,
                 'location': tweet.author.location
             }
+            users[tweet.author.screen_name]['full_user_info'] = tweet.author
+            users[tweet.author.screen_name]['tweet_counts']['tweet_count'] = 0
             users[tweet.author.screen_name]['tweet_counts']['favorited_count'] = 0
             users[tweet.author.screen_name]['tweet_counts']['retweeted_count'] = 0
+        users[tweet.author.screen_name]['tweet_counts']['tweet_count'] += 1
         users[tweet.author.screen_name]['tweet_counts']['favorited_count'] += tweet.favorite_count
         users[tweet.author.screen_name]['tweet_counts']['retweeted_count'] += tweet.retweet_count
-    return '{"success": true}'
 
-def get_tweets_from_query(query):
-    querystring = get_querystring_from_params(query['term[]'])
-    results = api.search(querystring)
-    import ipdb; ipdb.set_trace()
-    return results
+    for user in users.keys():
+        users[user]['score'] = get_score(users[user])
+    return users
+
+
+def get_score(user):
+    score = 0
+    score += user['tweet_counts']['tweet_count']
+    score += user['tweet_counts']['favorited_count']
+    score += user['tweet_counts']['favorited_count']
+    score += user['user_info']['listed_count'] * 10
+    score += user['user_info']['followers_count'] * 5
+    score += user['user_info']['friends_count'] / 2
+    return score
 
 def get_querystring_from_params(params):
     string = urllib.quote_plus('+'.join(params))
