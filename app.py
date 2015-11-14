@@ -76,10 +76,8 @@ def get_score(user):
     score = 0
     score += user['tweet_counts']['tweet_count']
     score += user['tweet_counts']['favorited_count']
-    score += user['tweet_counts']['favorited_count']
-    score += user['user_info']['listed_count'] * 10
-    score += user['user_info']['followers_count'] * 5
-    score += user['user_info']['friends_count'] / 2
+    score += user['tweet_counts']['retweeted_count'] * 2
+    score += user['user_info']['followers_count'] / 50
     return score
 
 def get_querystring_from_params(params):
