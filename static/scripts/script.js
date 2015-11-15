@@ -20,15 +20,16 @@
   var renderResults = function(data) {
     $('.error').html('');
 
-    if (data.users.length < 1)
-      $('.error').html('<h2>No results found!</h2>');
+    if (data.users.length < 1) {
+      $('.error').html('<div class="error-message"><strong>✖<strong> I\'m afraid the landscape is barren. Perhaps you need to plant more seeds.</div>');
+    }
 
     var tmpl = _.template($('#results-tmpl').html());
-    $('#results ul').html(tmpl({ users: data.users }));
+
     setTimeout(function() {
       $('body').addClass('hide-plants show-results');
     }, 4000);
-    $('#results ul').html(tmpl({ users: _.sortBy(data.users, 'score').reverse() }));
+    $('#the-people').html(tmpl({ users: _.sortBy(data.users, 'score').reverse() }));
   };
 
   var bindEvents = function() {

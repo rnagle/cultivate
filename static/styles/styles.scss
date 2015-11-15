@@ -13,6 +13,7 @@ html, body {
 
 body {
   font-family: "Whitney Cond A", "Whitney Cond B";
+  overflow-x: hidden;
   font-weight: 400;
   font-size: 20px;
   line-height: 1.3;
@@ -232,10 +233,21 @@ body.hide-plants {
   padding: 20px 20px 20px 250px;
   color: $lightBrown;
   font-size: 1.5rem;
+  flex-shrink: 0;
   p {
     max-width: 600px;
   }
   a {
     color: inherit;
+  }
+}
+
+.error-message {
+  background: white;
+  padding: 2rem;
+  border-top: 10px solid red;
+  font-size: 2rem;
+  strong {
+    color: red;
   }
 }
