@@ -3,13 +3,15 @@
   var $ = jQuery;
 
   var submitSearch = function() {
+    $('body').removeClass('hide-plants show-results');
+    $('#the-people').html('');
+
     if (!validateSearch()) {
       $('body').addClass('hide-plants show-results')
       $('.error').html('<div class="error-message"><strong>✖</strong> Sorry, we\'ll need more seeds (keywords) to yield crops (results).</div>');
       return false;
     }
 
-    $('body').removeClass('hide-plants show-results');
     generate();
 
     $.ajax({
