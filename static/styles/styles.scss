@@ -154,7 +154,7 @@ p {
       padding: 20px;
       &:nth-child(1) {
         width: 100%;
-        padding: 50px;
+        // padding: 50px;
         .user-info {
           h4 {
             font-size: 3.2rem;
@@ -237,5 +237,24 @@ body.hide-plants {
   }
   a {
     color: inherit;
+  }
+}
+
+.sample-queries {
+  padding: 40px 20px 20px 250px;
+  p {
+    margin-bottom: .5rem;
+  }
+
+  .queries button {
+    display: inline-block;
+    background: #ce8339;
+    border: 0;
+    padding: 5px 10px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
   }
 }
