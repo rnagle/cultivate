@@ -3,6 +3,11 @@
   var $ = jQuery;
 
   var submitSearch = function() {
+    if (!validateSearch()) {
+      $('body').addClass('hide-plants show-results')
+      $('.error').html('<div class="error-message"><strong>✖</strong> Sorry, we\'ll need more seeds (keywords) to yield crops (results).</div>');
+      return false;
+    }
 
     $('body').removeClass('hide-plants show-results');
     generate();
@@ -15,6 +20,15 @@
       success: renderResults
     });
     return false;
+  };
+
+  var validateSearch = function() {
+    var valid = true;
+    $('.main-search-form input').each(function() {
+      if ($(this).val().trim() == '')
+        valid = false;
+    });
+    return valid;
   };
 
   var renderResults = function(data) {
