@@ -3,8 +3,15 @@
   var $ = jQuery;
 
   var submitSearch = function() {
-
     $('body').removeClass('hide-plants show-results');
+    $('#the-people').html('');
+
+    if (!validateSearch()) {
+      $('body').addClass('hide-plants show-results')
+      $('.error').html('<div class="error-message"><strong>✖</strong> Sorry, we\'ll need more seeds (keywords) to yield crops (results).</div>');
+      return false;
+    }
+
     generate();
 
     $.ajax({
@@ -15,6 +22,15 @@
       success: renderResults
     });
     return false;
+  };
+
+  var validateSearch = function() {
+    var valid = true;
+    $('.main-search-form input').each(function() {
+      if ($(this).val().trim() == '')
+        valid = false;
+    });
+    return valid;
   };
 
   var renderResults = function(data) {
