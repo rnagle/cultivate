@@ -36,6 +36,19 @@
     $('form').on('submit', submitSearch);
   };
 
+
+  $('.queries button').on('click', function() {
+    city = $(this).data("city");
+    term = $(this).data("terms");
+    $("input[name='city']").val(city);
+    $("input[name='term[]']").val(term);
+    $('form').submit();
+  });
+
+
+
+
+
   $(document).ready(function() {
     bindEvents();
   });
