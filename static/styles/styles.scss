@@ -145,35 +145,54 @@ p {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    > li {
-      display: flex;
-      background: white;
-      border-radius: 2px;
-      box-shadow: 1px 1px 0 rgba(black, 0.2);
-      width: 49%;
-      margin: 0 0 1rem 0;
-      padding: 20px;
-      &:nth-child(1) {
-        width: 100%;
-        padding: 50px;
-        .user-info {
-          h4 {
-            font-size: 3.2rem;
-          }
-        }
-        .bio {
-          font-size: 1.5rem;
-        }
-        .avatar-wrap {
-          margin-right: 20px;
-          img {
-            width: 200px;
-          }
-        }
+  }
+}
+.person {
+  display: flex;
+  background: white;
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 rgba(black, 0.2);
+  width: 49%;
+  margin: 0 0 1rem 0;
+  padding: 20px;
+  &:nth-child(1) {
+    width: 100%;
+    padding: 50px;
+    .user-info {
+      h4 {
+        font-size: 3.2rem;
+      }
+    }
+    .bio {
+      font-size: 1.5rem;
+    }
+    .avatar-wrap {
+      margin-right: 20px;
+      img {
+        width: 200px;
       }
     }
   }
+
+  @for $i from 1 through 100 {
+    &:nth-child(#{$i}) {
+      animation: unearth 0.5s (($i / 20) + 1)+s forwards;
+    }
+  }
+
 }
+
+@keyframes unearth {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .user-info {
   padding: 0 10px;
   flex: 1;

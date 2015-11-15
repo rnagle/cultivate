@@ -21,23 +21,25 @@
     $('.error').html('');
 
     if (data.users.length < 1) {
-      $('.error').html('<div class="error-message"><strong>✖<strong> I\'m afraid the landscape is barren. Perhaps you need to plant more seeds.</div>');
+      $('.error').html('<div class="error-message"><strong>✖</strong> I\'m afraid the landscape is barren. Perhaps you need to plant more seeds.</div>');
     }
 
     var tmpl = _.template($('#results-tmpl').html());
+    $('#the-people').html(tmpl({ users: _.sortBy(data.users, 'score').reverse() }));
 
     setTimeout(function() {
       $('body').addClass('hide-plants show-results');
+      $('html, body').animate({
+          scrollTop: $("#results").offset().top
+      }, 2000);
     }, 4000);
-    $('#the-people').html(tmpl({ users: _.sortBy(data.users, 'score').reverse() }));
+
   };
 
   var bindEvents = function() {
     $('form').on('submit', submitSearch);
   };
 
-  $(document).ready(function() {
-    bindEvents();
-  });
+  bindEvents();
 
 })();
