@@ -40,7 +40,6 @@ def search():
     else:
         return real_search()
 
-
 def fake_search():
     query = dict(request.form)
     city = query['city'][0]
@@ -51,7 +50,7 @@ def fake_search():
             resp = users_json.read()
             return Response(resp, mimetype='application/json')
 
-    if term == 'buzzfeed.com/food' and city == 'Indianapolis, IN':
+    if term == 'buzzfeed.com/food' and city == 'Salt Lake City, UT':
         with open('data/buzzfeed_indy.json') as users_json:
             resp = users_json.read()
             return Response(resp, mimetype='application/json')
